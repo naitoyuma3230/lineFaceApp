@@ -103,6 +103,7 @@ def handle_image(event):
         else:
             # 検出されない場合のメッセージ
             text = "写真から顔が検出できませんでした。他の画像で試してください。"
+            
     except:
         # エラー時のメッセージ
         text = "error" 

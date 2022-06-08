@@ -1,4 +1,3 @@
-# Line BOT reply message
+# Line BOT Face Recognation
 
-オウム返しする BOT
-LINE 公式の Python コード
+顔写真を読み取って、オードリーヘップバーンか否か判別する LINE BOT
