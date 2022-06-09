@@ -61,15 +61,22 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+
+    response_msg = '{1}n\顔写真を送って！'.format(event.message.text)
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text + "n\ 顔写真を送って！"))
+        TextSendMessage(text=response_msg))
 
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
     # LINEチャネルを通じてメッセージを返答
     try:
+
+        valified_text = ""
+        emotion_text = ""
+
         # メッセージIDを受け取る
         message_id = event.message.id
         # メッセージIDに含まれるmessage_contentを抽出する
@@ -120,7 +127,7 @@ def handle_image(event):
             # 検出されない場合のメッセージ
             valified_text = "顔が検出できない！\nこれ本当に顔写真？"
 
-        response_text = 'この写真は… {valified_text}\n そして感情分布は…{emotion_text}'
+        response_text = 'この写真は…{0}\n そして感情分布は…{1}'.format(valified_text,emotion_text)
             
     except:
         # エラー時のメッセージ
