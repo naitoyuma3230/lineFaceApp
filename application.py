@@ -102,17 +102,17 @@ def handle_image(event):
             attr_text = '推定年齢:{0}歳\n性別{1}'.format(age,gender)
 
             # 感情・表情を抽出
-            smile = detected_faces[0].face_attributes.smile
-            anger = detected_faces[0].face_attributes.emotion.anger
-            contempt = detected_faces[0].face_attributes.emotion.contempt
-            disgust = detected_faces[0].face_attributes.emotion.disgust
-            fear = detected_faces[0].face_attributes.emotion.fear
-            happiness = detected_faces[0].face_attributes.emotion.happiness
-            neutral = detected_faces[0].face_attributes.emotion.neutral
-            sadness = detected_faces[0].face_attributes.emotion.sadness
-            surprise = detected_faces[0].face_attributes.emotion.surprise
+            smile = format(detected_faces[0].face_attributes.smile * 100, '.1f')
+            anger = format(detected_faces[0].face_attributes.emotion.anger * 100, '.1f')
+            contempt = format(detected_faces[0].face_attributes.emotion.contempt * 100, '.1f')
+            disgust = format(detected_faces[0].face_attributes.emotion.disgust * 100, '.1f')
+            fear = format(detected_faces[0].face_attributes.emotion.fear * 100, '.1f')
+            happiness = format(detected_faces[0].face_attributes.emotion.happiness * 100, '.1f')
+            neutral = format(detected_faces[0].face_attributes.emotion.neutral * 100, '.1f')
+            sadness = format(detected_faces[0].face_attributes.emotion.sadness * 100, '.1f')
+            surprise = format(detected_faces[0].face_attributes.emotion.surprise * 100, '.1f')
 
-            emotion_text = '笑顔(score:{0})\n怒り(score:{1})\n侮蔑(score:{2})\n嫌悪(score:{3})\n恐怖(score:{4})\n幸福(score:{5})\n自然(score:{6})\n悲哀(score:{7})\n驚き(score:{8})' \
+            emotion_text = '笑顔度:{0}点\n怒り度:{1}点\n侮蔑度:{2}点\n嫌悪度:{3}点\n恐怖度{4}点\n幸せ度:{5}点\n平常度:{6})\n悲しみ度:{7}点\n驚き度:{8}点' \
             .format(smile,anger,contempt,disgust,fear,happiness,neutral,sadness,surprise)
 
             
