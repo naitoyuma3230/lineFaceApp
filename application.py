@@ -73,8 +73,9 @@ def handle_message(event):
 def handle_image(event):
     # LINEチャネルを通じてメッセージを返答
     try:
-        valified_text = ""
+        attr_text = ""
         emotion_text = ""
+        valified_text = ""
 
         # メッセージIDを受け取る
         message_id = event.message.id
@@ -84,12 +85,21 @@ def handle_image(event):
         image = BytesIO(message_content.content)
         
         # Detect from streamで顔検出
-        detected_faces = face_client.face.detect_with_stream(image)
+        detected_faces = face_client.face.detect_with_stream(
+            image, 
+            return_face_attributes = ['age','gender','smile','emotion']
+        )
         print(detected_faces)
         # 検出結果に応じて処理を分ける
         if detected_faces != []:
             # 検出された顔の最初のIDを取得
             # text = detected_faces[0].face_id
+
+            # 年齢と性別
+            age = detected_faces[0].face_attributes.age
+            gender = detected_faces[0].face_attributes.gender
+
+            attr_text = '推定年齢:{0}歳\n性別{1}'.format(age,gender)
 
             # 感情・表情を抽出
             smile = detected_faces[0].face_attributes.smile
@@ -127,7 +137,7 @@ def handle_image(event):
             valified_text = "顔が検出できない！これ本当に顔写真？"
 
         # response_text = 'この写真は…{0}\n そして感情分布は…{1}'.format(valified_text, emotion_text)
-        response_text = 'この写真は{0}n\感情分布は{1}'.format(valified_text,emotion_text)
+        response_text = 'この顔は{0}n\{1}n\読み取れる感情は…n\{2}'.format(valified_text,attr_text,valified_text)
             
     except:
         # エラー時のメッセージ
