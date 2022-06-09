@@ -1,4 +1,5 @@
 import os
+from urllib import response
 
 from flask import Flask, request, abort
 
@@ -32,8 +33,8 @@ app = Flask(__name__)
 
 YOUR_CHANNEL_ACCESS_TOKEN = os.getenv('YOUR_CHANNEL_ACCESS_TOKEN')
 YOUR_CHANNEL_SECRET = os.getenv('YOUR_CHANNEL_SECRET')
-PERSON_GROUP_ID = os.getenv('PERSON_GROUP_ID')
-PERSON_ID_AUDREY = os.getenv('PERSON_ID_AUDREY')
+PERSON_GROUP_ID = os.getenv('KEISUKE_GROUP_ID')
+PERSON_ID_AUDREY = os.getenv('PERSON_ID_KEISUKE')
 
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
@@ -62,7 +63,7 @@ def callback():
 def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text=event.message.text + "n\ 顔写真を送って！"))
 
 
 @handler.add(MessageEvent, message=ImageMessage)
@@ -84,6 +85,22 @@ def handle_image(event):
             # 検出された顔の最初のIDを取得
             # text = detected_faces[0].face_id
 
+            # 感情・表情を抽出
+            smile = detected_faces[0].face_attributes.smile
+            anger = detected_faces[0].face_attributes.emotion.anger
+            contempt = detected_faces[0].face_attributes.emotion.contempt
+            disgust = detected_faces[0].face_attributes.emotion.disgust
+            fear = detected_faces[0].face_attributes.emotion.fear
+            happiness = detected_faces[0].face_attributes.emotion.happiness
+            neutral = detected_faces[0].face_attributes.emotion.neutral
+            sadness = detected_faces[0].face_attributes.emotion.sadness
+            surprise = detected_faces[0].face_attributes.emotion.surprise
+
+            emotion_text = '笑顔(score:{0})\n怒り(score:{1})\n侮蔑(score:{2})\n嫌悪(score:{3})\n恐怖(score:{4})\n幸福(score:{5})\n自然(score:{6})\n悲哀(score:{7})\n驚き(score:{8})' \
+            .format(smile,anger,contempt,disgust,fear,happiness,neutral,sadness,surprise)
+
+            
+
             # 顔検出ができたら顔認証を行う
             valified = face_client.face.verify_face_to_person(
                 face_id = detected_faces[0].face_id,
@@ -91,25 +108,27 @@ def handle_image(event):
                 person_id = PERSON_ID_AUDREY
             )
             # 認証結果に応じて処理を変える
-            if valified:
-                if valified.is_identical:
-                    # 顔認証が一致した場合（スコアもつけて返す）
-                    text = 'この写真はオードリーヘップバーンです(score:{:.3f})'.format(valified.confidence)
-                else:
-                    # 顔認証が一致した場合（スコアもつけて返す）
-                    text = 'この写真はオードリーヘップバーンではありません(score:{:.3f})'.format(valified.confidence)
+            if valified.confidence > 0.7:
+                valified_text = '完全にTK!(score:{:.3f})'.format(valified.confidence)
+            elif valified.confidence > 0.5:
+                valified_text = 'ほぼTK!(score:{:.3f})'.format(valified.confidence)
+            elif valified.confidence <= 0.5 :
+                valified_text = 'TKではない(score:{:.3f})'.format(valified.confidence)
             else:
-                text = '識別できませんでした。'
+                valified_text = 'ごめん識別不能！'
         else:
             # 検出されない場合のメッセージ
-            text = "写真から顔が検出できませんでした。他の画像で試してください。"
+            valified_text = "顔が検出できない！\nこれ本当に顔写真？"
+
+        response_text = 'この写真は… {valified_text}\n そして感情分布は…{emotion_text}'
             
     except:
         # エラー時のメッセージ
-        text = "error" 
+        response_text = "error"
+
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=text)
+        TextSendMessage(text=response_text)
     )
 
 
