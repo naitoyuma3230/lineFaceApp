@@ -112,7 +112,7 @@ def handle_image(event):
             sadness = format(detected_faces[0].face_attributes.emotion.sadness * 100, '.1f')
             surprise = format(detected_faces[0].face_attributes.emotion.surprise * 100, '.1f')
 
-            emotion_text = '笑顔度:{0}点\n怒り度:{1}点\n侮蔑度:{2}点\n嫌悪度:{3}点\n恐怖度{4}点\n幸せ度:{5}点\n平常度:{6})\n悲しみ度:{7}点\n驚き度:{8}点' \
+            emotion_text = '笑顔度:{0}点\n怒り度:{1}点\n侮蔑度:{2}点\n嫌悪度:{3}点\n恐怖度{4}点\n幸せ度:{5}点\n平常度:{6}\n悲しみ度:{7}点\n驚き度:{8}点' \
             .format(smile,anger,contempt,disgust,fear,happiness,neutral,sadness,surprise)
 
             
