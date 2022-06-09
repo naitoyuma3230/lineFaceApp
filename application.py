@@ -125,19 +125,18 @@ def handle_image(event):
             )
             # 認証結果に応じて処理を変える
             if valified.confidence > 0.7:
-                valified_text = '完全にTK!(score:{:.3f})'.format(valified.confidence)
+                valified_text = 'この顔は完全にTK!\n(TKスコア:{:.3f}点)'.format(valified.confidence * 100)
             elif valified.confidence > 0.5:
-                valified_text = 'ほぼTK!(score:{:.3f})'.format(valified.confidence)
+                valified_text = 'この顔はほぼTK!\n(TKスコア:{:.3f}点)'.format(valified.confidence * 100)
             elif valified.confidence <= 0.5 :
-                valified_text = 'TKではない(score:{:.3f})'.format(valified.confidence)
+                valified_text = 'この顔はTKではない\n(TKスコア:{:.3f}点)'.format(valified.confidence * 100)
             else:
                 valified_text = 'ごめん識別不能！'
         else:
             # 検出されない場合のメッセージ
             valified_text = "顔が検出できない！これ本当に顔写真？"
 
-        # response_text = 'この写真は…{0}\n そして感情分布は…{1}'.format(valified_text, emotion_text)
-        response_text = 'この顔は{0}n\{1}n\読み取れる感情は…n\{2}'.format(valified_text,attr_text,valified_text)
+        response_text = '{0}\n見た感じ...\n{1}\n\n読み取れる感情は...\n{2}'.format(valified_text,attr_text,emotion_text)
             
     except:
         # エラー時のメッセージ
