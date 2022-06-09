@@ -62,7 +62,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
 
-    response_msg = '{1}n\顔写真を送って！'.format(event.message.text)
+    response_msg = '{0}\n顔写真を送って!'.format(event.message.text)
 
     line_bot_api.reply_message(
         event.reply_token,
@@ -73,9 +73,8 @@ def handle_message(event):
 def handle_image(event):
     # LINEチャネルを通じてメッセージを返答
     try:
-
         valified_text = ""
-        emotion_text = ""
+        # emotion_text = ""
 
         # メッセージIDを受け取る
         message_id = event.message.id
@@ -93,18 +92,18 @@ def handle_image(event):
             # text = detected_faces[0].face_id
 
             # 感情・表情を抽出
-            smile = detected_faces[0].face_attributes.smile
-            anger = detected_faces[0].face_attributes.emotion.anger
-            contempt = detected_faces[0].face_attributes.emotion.contempt
-            disgust = detected_faces[0].face_attributes.emotion.disgust
-            fear = detected_faces[0].face_attributes.emotion.fear
-            happiness = detected_faces[0].face_attributes.emotion.happiness
-            neutral = detected_faces[0].face_attributes.emotion.neutral
-            sadness = detected_faces[0].face_attributes.emotion.sadness
-            surprise = detected_faces[0].face_attributes.emotion.surprise
+            # smile = detected_faces[0].face_attributes.smile
+            # anger = detected_faces[0].face_attributes.emotion.anger
+            # contempt = detected_faces[0].face_attributes.emotion.contempt
+            # disgust = detected_faces[0].face_attributes.emotion.disgust
+            # fear = detected_faces[0].face_attributes.emotion.fear
+            # happiness = detected_faces[0].face_attributes.emotion.happiness
+            # neutral = detected_faces[0].face_attributes.emotion.neutral
+            # sadness = detected_faces[0].face_attributes.emotion.sadness
+            # surprise = detected_faces[0].face_attributes.emotion.surprise
 
-            emotion_text = '笑顔(score:{0})\n怒り(score:{1})\n侮蔑(score:{2})\n嫌悪(score:{3})\n恐怖(score:{4})\n幸福(score:{5})\n自然(score:{6})\n悲哀(score:{7})\n驚き(score:{8})' \
-            .format(smile,anger,contempt,disgust,fear,happiness,neutral,sadness,surprise)
+            # emotion_text = '笑顔(score:{0})\n怒り(score:{1})\n侮蔑(score:{2})\n嫌悪(score:{3})\n恐怖(score:{4})\n幸福(score:{5})\n自然(score:{6})\n悲哀(score:{7})\n驚き(score:{8})' \
+            # .format(smile,anger,contempt,disgust,fear,happiness,neutral,sadness,surprise)
 
             
 
@@ -125,9 +124,10 @@ def handle_image(event):
                 valified_text = 'ごめん識別不能！'
         else:
             # 検出されない場合のメッセージ
-            valified_text = "顔が検出できない！\nこれ本当に顔写真？"
+            valified_text = "顔が検出できない！これ本当に顔写真？"
 
-        response_text = 'この写真は…{0}\n そして感情分布は…{1}'.format(valified_text,emotion_text)
+        # response_text = 'この写真は…{0}\n そして感情分布は…{1}'.format(valified_text, emotion_text)
+        response_text = valified_text
             
     except:
         # エラー時のメッセージ
@@ -137,7 +137,6 @@ def handle_image(event):
         event.reply_token,
         TextSendMessage(text=response_text)
     )
-
 
 if __name__ == "__main__":
     app.run()
